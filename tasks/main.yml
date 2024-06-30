@@ -1,10 +1,13 @@
     - name: check for backup file
+      stat:
+        path: "{{ home }}/backup.jar"
+        register: result
+
+    - name: delete the backup file if exists
       file:
         path: "{{ home }}/backup.jar"
         state: absent
- 
-    - name: delete the old backup.jar
-      command: rm -rf {{ home }}/backup.jar
+      when: result.stat.exists
 
     - name: create new backup.jar
       command: cp {{ home }}/proj.jar {{ home }}/backup.jar
